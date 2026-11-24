@@ -1,0 +1,502 @@
+.pb-popup {
+    position: absolute;
+    z-index: 10000;
+    min-width: 240px;
+    max-width: 420px;
+    padding: 4px 0;
+    background: var(--background-fill-primary, #1f1f1f);
+    border: 1px solid var(--border-color-primary, #444);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    font-size: 14px;
+}
+.pb-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 10px;
+    cursor: pointer;
+    color: var(--body-text-color, #ddd);
+}
+.pb-item.pb-active,
+.pb-item:hover {
+    background: var(--color-accent-soft, #333);
+}
+.pb-item.pb-inactive {
+    opacity: 0.45;
+}
+.pb-name {
+    flex: 1;
+}
+.pb-hint {
+    opacity: 0.6;
+    font-size: 12px;
+}
+/* Section 17: content of the highlighted item. width 0 + min-width 100% keeps it from widening the
+   popup: it takes the width of the item list (within the popup's min/max width). */
+.pb-footer {
+    box-sizing: border-box;
+    width: 0;
+    min-width: 100%;
+    margin-top: 4px;
+    padding: 4px 10px 2px;
+    border-top: 1px solid var(--border-color-primary, #444);
+    color: var(--body-text-color-subdued, #999);
+    font-size: 12px;
+    line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+    max-height: calc(3 * 1.35em + 6px);
+}
+.pb-thumb {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.pb-thumb-empty {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    background: var(--background-fill-secondary, #2a2a2a);
+}
+.pb-preview {
+    font-size: 13px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+.pb-preview-label {
+    opacity: 0.6;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+.pb-warn {
+    margin-top: 4px;
+    color: var(--color-red-500, #ef4444);
+}
+/* Inside the accordion the preview sits in `.prose`, whose `.prose *` colour rule (0,2,0) beats a plain
+   class; repeat the warning colour with enough specificity. */
+.pb-acc .pb-preview .pb-warn {
+    color: var(--color-red-500, #ef4444);
+}
+/* Accordion controls (design notes 23b). The accordion's gr.HTML content sits inside `.prose`, and
+   Gradio 4.40's index css (scoped to .gradio-container-4-40-0) has rules that beat plain class selectors:
+     [type=text] ...            (0,2,0)  background #fff, border #6b7280, radius 0, padding .5rem .75rem,
+                                         font-size 1rem, appearance none   -> the white inputs
+     button, [type=button]      (0,2,0)  background-color transparent        -> the unstyled buttons
+     button, input              (0,1,1)  margin 0, padding 0, color/font inherit
+     .prose *                   (0,2,0)  color var(--body-text-color)
+     .prose button, .prose input (0,2,1) margin-bottom var(--spacing-sm)
+   The rules below use `.pb-acc <class>[type=...]` = (0,3,0), which wins over all of them without
+   !important. Theme variables come from Gradio's theme css (`:root` = light values, `.dark` = dark
+   values); the fallbacks are dark values for when a variable is missing. */
+.pb-acc {
+    color-scheme: light;
+}
+.dark .pb-acc {
+    color-scheme: dark; /* native parts (datalist arrow, caret, scrollbars) follow the dark theme */
+}
+.pb-acc .pb-reroll[type="button"] {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    padding: 4px 10px;
+    border: 1px solid var(--button-secondary-border-color, var(--border-color-primary, #4b5563));
+    border-radius: var(--button-small-radius, 6px);
+    /* Gradio's Default theme fill is a linear-gradient (background-image); the solid colour under it
+       (the theme's border colour: neutral-200 light / neutral-600 dark) keeps the button readable if a
+       theme gives no image or the gradient does not load. */
+    background: var(--button-secondary-background-fill, #4b5563);
+    background-color: var(--button-secondary-border-color, #4b5563);
+    color: var(--button-secondary-text-color, #f3f4f6);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    cursor: pointer;
+}
+.pb-acc .pb-reroll[type="button"]:hover {
+    background: var(--button-secondary-background-fill-hover, var(--button-secondary-background-fill, #6b7280));
+    background-color: var(--button-secondary-border-color-hover, var(--button-secondary-border-color, #6b7280));
+    color: var(--button-secondary-text-color-hover, var(--button-secondary-text-color, #fff));
+    border-color: var(--button-secondary-border-color-hover, var(--button-secondary-border-color, #6b7280));
+}
+.pb-acc .pb-reroll[type="button"]:focus-visible {
+    outline: 2px solid var(--color-accent, #f97316);
+    outline-offset: 1px;
+}
+.pb-acc .pb-reroll[type="button"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.pb-acc .pb-pin[type="button"] {
+    margin-left: 6px;
+}
+.pb-preview-subs {
+    opacity: 0.75;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* Save prompt selection as a block (design notes section 16). */
+.pb-create {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+.pb-acc .pb-create-input[type="text"] {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1 1 120px;
+    min-width: 0;
+    margin: 0;
+    padding: 4px 8px;
+    border: 1px solid var(--input-border-color, var(--border-color-primary, #4b5563));
+    border-radius: var(--input-radius, 6px);
+    background: var(--input-background-fill, #374151);
+    color: var(--body-text-color, #f3f4f6);
+    box-shadow: var(--input-shadow, none);
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.4;
+}
+.pb-acc .pb-create-input[type="text"]::placeholder {
+    color: var(--input-placeholder-color, #9ca3af);
+    opacity: 1;
+}
+.pb-acc .pb-create-input[type="text"]:hover {
+    border-color: var(--input-border-color-hover, var(--input-border-color, #6b7280));
+}
+.pb-acc .pb-create-input[type="text"]:focus {
+    /* Like Gradio's own textboxes: background unchanged on focus (--input-background-fill-focus is a
+       saturated blue in the Default dark theme); a visible accent ring instead of the faint theme one. */
+    outline: none;
+    border-color: var(--color-accent, #f97316);
+    box-shadow: 0 0 0 1px var(--color-accent, #f97316);
+}
+.pb-acc .pb-create-input[type="text"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.pb-acc .pb-create-btn[type="button"] {
+    flex: 0 0 auto;
+}
+.pb-acc .pb-create-btn[type="button"]:disabled {
+    cursor: progress;
+}
+.pb-create-msg {
+    min-height: 1em;
+    font-size: 12px;
+    margin-top: 4px;
+    opacity: 0.85;
+}
+/* (0,3,0): beats `.prose *` (0,2,0), which would otherwise set the body text colour. */
+.pb-acc .pb-create-msg.pb-create-msg-warn {
+    color: var(--color-red-500, #ef4444);
+    opacity: 1;
+}
+
+/* ---------- Management tab (design notes section 11). Every rule is scoped to pb_ ids / pb- classes. ---------- */
+
+/* Action bar at the top of the tab (not sticky: .gradio-container has overflow: hidden): block picker,
+   New, Save, Refresh + status line. The buttons sit on the bottom line of the row, so they line up with
+   the picker's input box (the picker has container=False, so its box is the bottom of its column), and
+   all have the same height as that box. */
+#pb_actionbar {
+    --pb-bar-h: 42px;
+    border-bottom: 1px solid var(--border-color-primary);
+    padding: 6px 0;
+}
+#pb_actionbar_row {
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    gap: 8px;
+}
+#pb_picker .wrap {
+    min-height: var(--pb-bar-h);
+}
+#pb_actionbar_row > button.pb-bar-btn {
+    align-self: flex-end;
+    height: var(--pb-bar-h);
+    min-height: var(--pb-bar-h);
+    max-height: var(--pb-bar-h);
+    padding-top: 0;
+    padding-bottom: 0;
+}
+#pb_actionbar_row > button.pb-icon-btn {
+    width: var(--pb-bar-h);
+    min-width: var(--pb-bar-h) !important;
+    max-width: var(--pb-bar-h);
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 20px;
+    flex-grow: 0 !important;
+}
+#pb_status {
+    min-height: 1.2em;
+}
+#pb_status p {
+    margin: 0;
+}
+
+/* Floating Save button (bottom right). It lives inside the PromptBlocks tab, so it is hidden with the
+   tab. z-index stays below the autocomplete popup (10000). */
+#pb_save_fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 900;
+    width: auto !important;
+    min-width: 96px !important;
+    flex-grow: 0 !important;
+    padding: 10px 22px;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* "Modified" marker on both Save buttons (section 20; class set by the promptblocks_*.js files): a dot after the
+   label in the button's own text colour. */
+#pb_save_btn.pb-dirty::after,
+#pb_save_fab.pb-dirty::after {
+    content: "";
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-left: 0.45em;
+    border-radius: 50%;
+    background: currentColor;
+    vertical-align: middle;
+}
+
+/* Form signal for that marker: must stay in the DOM (observed by the promptblocks_*.js files), never shown. */
+#pb_form_epoch {
+    display: none !important;
+}
+
+/* Toast above the floating Save button: repeats the status line (created by the promptblocks_*.js files). */
+.pb-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 80px;
+    z-index: 901;
+    max-width: min(420px, calc(100vw - 48px));
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color-primary, #444);
+    background: var(--background-fill-primary, #1f1f1f);
+    color: var(--body-text-color, #ddd);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    font-size: var(--text-md, 14px);
+    line-height: 1.4;
+    cursor: pointer;
+    word-break: break-word;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: none;
+}
+.pb-toast.pb-toast-show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.pb-toast.pb-toast-warn {
+    border-color: var(--color-red-500, #ef4444);
+}
+
+/* Block browser (left column): search, category filter, gallery with its own scroll. */
+#pb_browser {
+    gap: 6px;
+}
+#pb_gallery .caption-label {
+    font-size: var(--text-sm, 12px);
+}
+/* "Enable shown" / "Disable shown" under the gallery: one compact line, two equal buttons. */
+#pb_browser #pb_browser_bulk {
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+#pb_browser #pb_browser_bulk > button {
+    flex: 1 1 0;
+    min-width: 0 !important;
+    padding-left: 4px;
+    padding-right: 4px;
+    white-space: nowrap;
+}
+
+/* Muted hint lines (category / slot hints, chance line). */
+.pb-hintline {
+    opacity: 0.75;
+    font-size: var(--text-sm, 12px);
+}
+.pb-hintline p {
+    margin: 2px 0;
+}
+
+/* Sub-block rows: one compact line each. */
+#pb_subs .pb-subrow {
+    gap: 4px;
+    margin: 0 0 4px 0;
+    padding: 0;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+#pb_subs .pb-subhead {
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    flex-wrap: nowrap;
+}
+#pb_subs .pb-subhead > div {
+    gap: 0;
+}
+#pb_subs .pb-subhead p {
+    margin: 0;
+    font-size: var(--text-sm, 12px);
+    font-weight: 600;
+    opacity: 0.75;
+}
+#pb_subs .pb-move-btn {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* ---------- Layout fixes found in a browser preview ---------- */
+
+/* Block browser: Gradio's gallery uses fixed 100px columns, which overflow a narrow sidebar.
+   Let the tiles share the available width instead, and never scroll sideways. */
+#pb_gallery .grid-wrap {
+    overflow-x: hidden;
+}
+#pb_gallery .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)) !important;
+    gap: 6px;
+    padding: 6px;
+}
+#pb_gallery .thumbnail-item {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+}
+/* Tile of the block selected in the Block dropdown (= loaded in the form), set by the promptblocks_*.js files
+   (design notes section 21). Independent of Gradio's own "selected" state, which the tab clears. */
+#pb_gallery .thumbnail-item.pb-loaded {
+    --ring-color: var(--color-accent);
+    border-color: var(--color-accent);
+    /* An outline is painted above the tile image (an inset box-shadow would be hidden under it). */
+    outline: 3px solid var(--color-accent);
+    outline-offset: -3px;
+}
+#pb_gallery .thumbnail-item.pb-loaded .caption-label {
+    background: var(--color-accent);
+    color: white;
+}
+/* Inactive block (caption ends with " (off)"), set by promptblocks_30_tab.js (design notes section 40).
+   Only the image is dimmed: the .pb-loaded outline and the caption stay clear. */
+#pb_gallery .thumbnail-item.pb-tile-off img {
+    opacity: 0.45;
+    filter: grayscale(65%);
+}
+
+/* Sub-block rows: fields may shrink below their min-width so the move buttons stay inside the panel. */
+#pb_subs .pb-subrow > .block,
+#pb_subs .pb-subhead > div {
+    min-width: 0 !important;
+}
+#pb_subs .pb-subrow > .pb-move-btn {
+    flex: 0 0 34px;
+    min-width: 34px !important;
+}
+
+/* Hint line inside the Block group: same background as the fields around it (no grey band). */
+#pb_block_group .pb-hintline {
+    background: var(--block-background-fill);
+    padding: 2px var(--block-padding, 12px);
+}
+
+/* Sub-block rows: fixed, readable widths for Mode / % / Slot; Name and Text share the rest.
+   Column order: 1 Name, 2 Text, 3 Mode, 4 % (chance), 5 Slot, 6-7 move buttons (header: 6 = "Move").
+   The header line uses the same rule so the titles line up. */
+#pb_subs .pb-subrow > :nth-child(1),
+#pb_subs .pb-subhead > :nth-child(1) {
+    flex: 2 1 70px !important;
+}
+#pb_subs .pb-subrow > :nth-child(2),
+#pb_subs .pb-subhead > :nth-child(2) {
+    flex: 5 1 110px !important;
+}
+#pb_subs .pb-subrow > :nth-child(3),
+#pb_subs .pb-subrow > :nth-child(5),
+#pb_subs .pb-subhead > :nth-child(3),
+#pb_subs .pb-subhead > :nth-child(5) {
+    flex: 0 0 104px !important;
+}
+#pb_subs .pb-subrow > :nth-child(4),
+#pb_subs .pb-subhead > :nth-child(4) {
+    flex: 0 0 58px !important;
+}
+#pb_subs .pb-subhead > :nth-child(6) {
+    flex: 0 0 72px !important;
+}
+
+/* Hint lines take no room while they are empty. */
+.pb-hintline:not(:has(p)) {
+    display: none;
+}
+#pb_block_group .pb-hintline {
+    min-height: 0;
+}
+
+/* Block browser: only as tall as its tiles (up to a scrolling maximum); smaller captions. */
+#pb_gallery {
+    height: auto !important;
+    min-height: 110px;
+    max-height: 460px;
+}
+#pb_gallery .grid-wrap {
+    height: auto !important;
+    max-height: 458px;
+}
+#pb_gallery .caption-label {
+    font-size: 11px;
+    max-width: calc(100% - 4px);
+}
+
+/* Sub-block rows by mode (design notes section 37 C). promptblocks_30_tab.js sets the classes from each row's
+   Mode dropdown. Only opacity: the fields stay focusable, clickable and editable (no pointer-events change).
+   Exclude: the whole row is dimmed. Include / Exclude: the % box (only used by Random) is dimmed. */
+#pb_subs .pb-subrow.pb-sub-exclude {
+    opacity: 0.55;
+}
+/* While a field of a dimmed row has focus (e.g. its Mode / Slot list is open) the row is shown at full
+   opacity: opacity < 1 makes the row its own stacking context, and the open option list (position: fixed,
+   z-index inside that context) would then be painted under the dimmed rows that follow it. */
+#pb_subs .pb-subrow.pb-sub-exclude:focus-within {
+    opacity: 1;
+}
+#pb_subs .pb-subrow.pb-sub-nochance > [id^="pb_sub_chance_"] {
+    opacity: 0.35;
+}
+/* "All Include | All Exclude | All Random" (section 37 B): one compact line above the rows. */
+#pb_subs_all {
+    gap: 4px;
+    margin: 0 0 4px 0;
+    flex-wrap: wrap;
+}
+/* Gradio gives scale=0 buttons in a row flex-basis 0, which squeezed them to a few pixels: size them by their label. */
+#pb_subs_all > button {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    white-space: nowrap;
+}

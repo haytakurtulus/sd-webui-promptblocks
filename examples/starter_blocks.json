@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "blocks": {
+    "casual": {
+      "category": "Outfit",
+      "text": "casual clothes, t-shirt, jeans",
+      "subs": [
+        {"name": "hat", "text": "baseball cap", "mode": "random", "slot": null},
+        {"name": "jacket", "text": "denim jacket", "mode": "random", "slot": null},
+        {"name": "sneakers", "text": "white sneakers", "mode": "random", "slot": null}
+      ]
+    },
+    "fantasy": {
+      "category": "Outfit",
+      "text": "fantasy outfit, leather belt, boots",
+      "subs": [
+        {"name": "cape", "text": "long flowing cape", "mode": "random", "slot": null},
+        {"name": "armor", "text": "silver armor", "mode": "random", "slot": null},
+        {"name": "staff", "text": "holding a wooden staff", "mode": "random", "slot": null}
+      ]
+    },
+    "city": {
+      "category": "Scene",
+      "text": "city street, buildings, outdoors",
+      "subs": [
+        {"name": "night", "text": "night, street lights", "mode": "random", "slot": null},
+        {"name": "rain", "text": "rain, wet pavement, reflections", "mode": "random", "slot": null},
+        {"name": "neon", "text": "neon signs", "mode": "random", "slot": null}
+      ]
+    },
+    "forest": {
+      "category": "Scene",
+      "text": "forest, trees, nature, outdoors",
+      "subs": [
+        {"name": "fog", "text": "light fog", "mode": "random", "slot": null},
+        {"name": "sunbeams", "text": "sunbeams through the leaves", "mode": "random", "slot": null},
+        {"name": "river", "text": "small river", "mode": "random", "slot": null}
+      ]
+    }
+  }
+}

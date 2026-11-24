@@ -1,0 +1,10 @@
+__pycache__/
+.pytest_cache/
+*.tmp
+data/thumbs/
+data/blocks.json
+.claude/
+data/tile_cache/
+data/backups/
+data/blocks.broken-*.json
+data/diagnostics/
