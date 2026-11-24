@@ -7,10 +7,16 @@ in the prompt with a short syntax. An autocomplete popup, thumbnails and an in-U
 hand-edited wildcard `.txt` files.
 
 ```
-~casual, %Scene, masterpiece
+~Quality, ~Samurai, %PBackground, %PAmbiance
 ```
-→ the `casual` block's text (plus its sub-blocks and LoRA), one random active block of the `Scene`
-category, then the rest of the prompt as written.
+→ the `Quality` and `Samurai` blocks' text (plus their sub-blocks and LoRA), one random active block of the
+`PBackground` and one of the `PAmbiance` category, in the order written.
+
+![Autocomplete popup in the prompt box](assets/popup.webp)
+*Type `~` or `%` in the prompt box: the popup lists matching blocks with thumbnails and shows the highlighted block's text.*
+
+![PromptBlocks management tab](assets/tab.webp)
+*The PromptBlocks tab: block browser with search and thumbnails, the block form with sub-blocks and ADetailer text.*
 
 ## Features
 
@@ -45,8 +51,9 @@ category, then the rest of the prompt as written.
 1. In Forge: **Extensions → Install from URL**, paste this repository's URL, press **Install**.
    (Or clone it into `stable-diffusion-webui-forge/extensions/`.)
 2. Restart Forge.
-3. On the first start the extension creates `data/blocks.json` with 4 example blocks
-   (categories `Outfit` and `Scene`). Open the **PromptBlocks** tab to edit them, or type `~` in a prompt box.
+3. On the first start the extension creates `data/blocks.json` with 11 example blocks in 6 categories
+   (with a few thumbnails, sub-blocks, a ban and an ADetailer text to look at). Open the **PromptBlocks** tab
+   to edit or delete them, or type `~` in a prompt box.
 
 ## Your data
 
