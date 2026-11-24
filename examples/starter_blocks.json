@@ -1,41 +1,92 @@
 {
   "version": 1,
   "blocks": {
-    "casual": {
-      "category": "Outfit",
-      "text": "casual clothes, t-shirt, jeans",
+    "Forest": {
+      "category": "PBackground",
+      "text": "forest, valley, river, stunning place,"
+    },
+    "Peak": {
+      "category": "PBackground",
+      "text": "mountain, peak, snow,"
+    },
+    "Climb": {
+      "category": "PPose",
+      "text": "climbing, holding,"
+    },
+    "Night": {
+      "category": "PAmbiance",
+      "text": "night time, dramatic lighting, moon, stars, sky,"
+    },
+    "Morning": {
+      "category": "PAmbiance",
+      "text": "sunrise, dramatic lighting, clouds,"
+    },
+    "Happy": {
+      "category": "PEmotion",
+      "text": "happy, smile, energetic,"
+    },
+    "Tired": {
+      "category": "PEmotion",
+      "text": "tired, uncomfortable"
+    },
+    "AnimeGirl": {
+      "category": "PCharacter",
+      "text": "White hair, mature, red eyes, long hair,",
       "subs": [
-        {"name": "hat", "text": "baseball cap", "mode": "random", "slot": null},
-        {"name": "jacket", "text": "denim jacket", "mode": "random", "slot": null},
-        {"name": "sneakers", "text": "white sneakers", "mode": "random", "slot": null}
+        {
+          "name": "climb",
+          "text": "climber outfit, sport glasses, gloves",
+          "mode": "include",
+          "slot": "Outfit"
+        },
+        {
+          "name": "camp",
+          "text": "camp outfit, camp bag, hat,",
+          "mode": "include",
+          "slot": "Outfit"
+        }
+      ],
+      "adetailer": [
+        "White hair, mature, red eyes, long hair,",
+        "",
+        "",
+        ""
       ]
     },
-    "fantasy": {
-      "category": "Outfit",
-      "text": "fantasy outfit, leather belt, boots",
+    "Samurai": {
+      "category": "PCharacter",
+      "text": "1man, samurai, katana, sheath, armor,",
+      "bans": [
+        "~Climb"
+      ],
       "subs": [
-        {"name": "cape", "text": "long flowing cape", "mode": "random", "slot": null},
-        {"name": "armor", "text": "silver armor", "mode": "random", "slot": null},
-        {"name": "staff", "text": "holding a wooden staff", "mode": "random", "slot": null}
+        {
+          "name": "helmet",
+          "text": "kabuto helmet",
+          "mode": "random",
+          "slot": null
+        },
+        {
+          "name": "mask",
+          "text": "menpo mask",
+          "mode": "random",
+          "slot": null
+        },
+        {
+          "name": "blossoms",
+          "text": "cherry blossoms, falling petals",
+          "mode": "random",
+          "slot": null
+        }
       ]
     },
-    "city": {
-      "category": "Scene",
-      "text": "city street, buildings, outdoors",
-      "subs": [
-        {"name": "night", "text": "night, street lights", "mode": "random", "slot": null},
-        {"name": "rain", "text": "rain, wet pavement, reflections", "mode": "random", "slot": null},
-        {"name": "neon", "text": "neon signs", "mode": "random", "slot": null}
-      ]
+    "RunScene": {
+      "category": "PPose",
+      "text": "running, foreshortening, motion blur, depth of field"
     },
-    "forest": {
-      "category": "Scene",
-      "text": "forest, trees, nature, outdoors",
-      "subs": [
-        {"name": "fog", "text": "light fog", "mode": "random", "slot": null},
-        {"name": "sunbeams", "text": "sunbeams through the leaves", "mode": "random", "slot": null},
-        {"name": "river", "text": "small river", "mode": "random", "slot": null}
-      ]
+    "Quality": {
+      "category": "PQuality",
+      "text": "masterpiece, best quality, highly detailed"
     }
   }
 }

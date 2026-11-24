@@ -8,6 +8,8 @@ DATA_FILE = os.path.join(EXT_ROOT, "data", "blocks.json")
 THUMB_DIR = os.path.join(EXT_ROOT, "data", "thumbs")
 # Tracked example blocks copied to DATA_FILE on the very first start (design notes section 41).
 STARTER_FILE = os.path.join(EXT_ROOT, "examples", "starter_blocks.json")
+# Tracked example thumbnails <name>.webp copied next to the starter blocks (design notes section 41b).
+STARTER_THUMB_DIR = os.path.join(EXT_ROOT, "examples", "thumbs")
 THUMB_SIZE = 128
 MAX_BACKUPS = 20
 
@@ -48,7 +50,8 @@ def seed_starter_blocks():
     """First start (design notes section 41): when DATA_FILE does not exist, copy STARTER_FILE there
     byte for byte (atomic write, no backup) and print one console line. An existing DATA_FILE (even an
     empty or broken one) is never touched. A missing or invalid starter file prints one line and writes
-    nothing. Returns True only when the file was written. Never raises."""
+    nothing. Returns True only when the file was written. Never raises. After writing, the starter
+    thumbnails are copied too (section 41b, _seed_starter_thumbs)."""
     try:
         if os.path.exists(DATA_FILE):
             return False
@@ -68,11 +71,39 @@ def seed_starter_blocks():
         os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
         _atomic_write_bytes(DATA_FILE, raw)
         n = len(blocks)
-        print(f"[PromptBlocks] first start: added {n} example block{'' if n == 1 else 's'} from {label}")
+        t = _seed_starter_thumbs(blocks)
+        extra = f" ({t} thumbnail{'' if t == 1 else 's'})" if t else ""
+        print(f"[PromptBlocks] first start: added {n} example block{'' if n == 1 else 's'} from {label}{extra}")
         return True
     except Exception as e:
         print(f"[PromptBlocks] starter blocks not added: {type(e).__name__}")
         return False
+
+
+def _seed_starter_thumbs(blocks):
+    """Section 41b: copy STARTER_THUMB_DIR/<name>.webp into THUMB_DIR for every starter block <name>
+    with a valid name, never over an existing file. Only called right after the starter blocks were
+    written. A failure prints one line and never undoes the blocks file. Returns the number copied."""
+    copied = 0
+    try:
+        if not os.path.isdir(STARTER_THUMB_DIR):
+            return 0
+        from .parser import is_valid_name
+        for file_name in sorted(os.listdir(STARTER_THUMB_DIR)):
+            name, ext = os.path.splitext(file_name)
+            if ext != ".webp" or name not in blocks or not is_valid_name(name):
+                continue
+            src = os.path.join(STARTER_THUMB_DIR, file_name)
+            if not os.path.isfile(src) or os.path.exists(thumb_path(name)):
+                continue
+            with open(src, "rb") as f:
+                raw = f.read()
+            os.makedirs(THUMB_DIR, exist_ok=True)
+            _atomic_write_bytes(thumb_path(name), raw)
+            copied += 1
+    except Exception as e:
+        print(f"[PromptBlocks] starter thumbnails not (all) copied: {type(e).__name__}")
+    return copied
 
 
 def _atomic_write_bytes(path, data):
