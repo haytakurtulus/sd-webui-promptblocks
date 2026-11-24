@@ -2,6 +2,9 @@
 
 Reusable, modular prompt blocks for **Stable Diffusion WebUI Forge**.
 
+![A prompt made only of %Category blocks, its random preview and the generated batch](assets/hero.webp)
+*A prompt made only of `%Category` calls: every image of the batch gets its own random picks.*
+
 Save prompt fragments (tags, LoRAs, ADetailer texts) as named blocks grouped in categories, then call them
 in the prompt with a short syntax. An autocomplete popup, thumbnails and an in-UI editor replace
 hand-edited wildcard `.txt` files.
@@ -17,6 +20,12 @@ hand-edited wildcard `.txt` files.
 
 ![PromptBlocks management tab](assets/tab.webp)
 *The PromptBlocks tab: block browser with search and thumbnails, the block form with sub-blocks and ADetailer text.*
+
+<p align="center">
+  <img src="assets/example-knight.webp" width="49%" alt="Example image: a kneeling knight and a giant crow">
+  <img src="assets/example-storm.webp" width="49%" alt="Example image: a cloaked mage on a cliff under a lightning storm">
+</p>
+<p align="center"><em>Example images made with PromptBlocks prompts.</em></p>
 
 ## Features
 
